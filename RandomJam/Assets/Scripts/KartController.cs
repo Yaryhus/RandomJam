@@ -23,6 +23,7 @@ public class KartController : MonoBehaviour
     [Header("Wheels")]
     public Transform frontLeftWheelTransform;
     public Transform frontRightWheelTransform;
+    public Transform carSteeringWheel;
     public float maxWheelRot;
 
     private float speedInput, turnInput;
@@ -57,6 +58,7 @@ public class KartController : MonoBehaviour
 
         frontLeftWheelTransform.localRotation = Quaternion.Euler(frontLeftWheelTransform.localRotation.eulerAngles.x, turnInput * maxWheelRot, frontLeftWheelTransform.localRotation.eulerAngles.z);
         frontRightWheelTransform.localRotation = Quaternion.Euler(frontRightWheelTransform.localRotation.eulerAngles.x, turnInput * maxWheelRot, frontRightWheelTransform.localRotation.eulerAngles.z);
+        carSteeringWheel.localRotation = Quaternion.Euler(carSteeringWheel.localRotation.eulerAngles.x, carSteeringWheel.localRotation.eulerAngles.y, -turnInput * 90);
 
         transform.position = rb.transform.position;
     }
