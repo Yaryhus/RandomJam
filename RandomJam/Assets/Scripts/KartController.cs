@@ -24,7 +24,7 @@ public class KartController : MonoBehaviour
     public Transform frontLeftWheelTransform;
     public Transform frontRightWheelTransform;
     public Transform carSteeringWheel;
-    public float maxWheelRot;
+    public float maxWheelRot = 25f;
 
     private float speedInput, turnInput;
     bool grounded;
@@ -43,16 +43,19 @@ public class KartController : MonoBehaviour
         {
             speedInput = Input.GetAxis("Vertical") * forwardAccel * 1000f;
         }
+
         else if (Input.GetAxis("Vertical") < 0)
         {
             speedInput = Input.GetAxis("Vertical") * reverseAccel * 1000f;
         }
+
 
         //Multiplied for vertical, to have the rotation flipped when inverse, or not be able to turn if stopped.
         turnInput = Input.GetAxis("Horizontal");
 
         if (grounded)
         {
+            //Debug.Log("Suelo");
             transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrengh * Time.deltaTime * Input.GetAxis("Vertical"), 0f));
         }
 
@@ -68,13 +71,17 @@ public class KartController : MonoBehaviour
         grounded = false;
         RaycastHit hit;
 
+        
         if (Physics.Raycast(groundRayPoint.position, -transform.up, out hit, groundRayLength, WhatIsGround))
         {
             //Debug.Log("Hitting ground");
             grounded = true;
+            
             rot = Quaternion.FromToRotation(transform.up, hit.normal);
             transform.rotation = Quaternion.Slerp(transform.rotation, rot * transform.rotation, 10 * Time.deltaTime);
+            //transform.rotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
         }
+        
 
         /*
         //Car smooth orientation, needs larger ray for jumps
@@ -83,6 +90,8 @@ public class KartController : MonoBehaviour
         }
         */
 
+
+        
         if (grounded)
         {
             rb.drag = dragOnGround;
@@ -90,6 +99,7 @@ public class KartController : MonoBehaviour
             {
                 rb.AddForce(transform.forward * speedInput);
             }
+            
         }
         else
         {
